@@ -1,0 +1,2 @@
+# Keep your working CUDA PyTorch installation. Install torch separately first.
+-e .[esm,dev]

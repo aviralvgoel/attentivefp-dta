@@ -1,0 +1,7 @@
+name: attentivefp-dta
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - pip
+# Install a GPU-compatible torch build separately, then pip install -e '.[esm,dev]'.
+# This deliberately does NOT replace your working sm_120-compatible torch build.
