@@ -1,0 +1,24 @@
+{
+  "pcba_training_molecules": 350341,
+  "downstream": {
+    "train": {
+      "unique_drugs": 54,
+      "drugs_in_pcba_train": 9,
+      "unique_scaffolds": 54,
+      "scaffolds_in_pcba_train": 12
+    },
+    "validation": {
+      "unique_drugs": 7,
+      "drugs_in_pcba_train": 1,
+      "unique_scaffolds": 7,
+      "scaffolds_in_pcba_train": 2
+    },
+    "test": {
+      "unique_drugs": 7,
+      "drugs_in_pcba_train": 1,
+      "unique_scaffolds": 7,
+      "scaffolds_in_pcba_train": 2
+    }
+  },
+  "interpretation": "Downstream-cold is not necessarily pretraining-unseen. Compound exposure does not establish assay endpoint overlap."
+}

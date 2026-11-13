@@ -1,0 +1,20 @@
+{
+  "mode": "cold_drug",
+  "pairs": {
+    "train": 94129,
+    "validation": 11759,
+    "test": 11769
+  },
+  "overlap": {
+    "train/validation/drug_id": 0,
+    "train/validation/protein_id": 223,
+    "train/validation/scaffold": 92,
+    "train/test/drug_id": 0,
+    "train/test/protein_id": 222,
+    "train/test/scaffold": 84,
+    "validation/test/drug_id": 0,
+    "validation/test/protein_id": 221,
+    "validation/test/scaffold": 78
+  },
+  "excluded": 0
+}

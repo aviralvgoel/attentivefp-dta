@@ -1,0 +1,46 @@
+{
+  "root": "/home/dmlab/Aviral/attentivefp_dta_final",
+  "seed": 42,
+  "data": {
+    "processed_dir": "/home/dmlab/Aviral/attentivefp_dta_final/data/kiba/processed",
+    "split_file": "/home/dmlab/Aviral/attentivefp_dta_final/data/kiba/processed/splits/scaffold_seed42.json",
+    "protein_cache": "/home/dmlab/Aviral/attentivefp_dta_final/data/kiba/esm2_mean.pt",
+    "allow_synthetic": false
+  },
+  "model": {
+    "drug": {
+      "hidden_dim": 256,
+      "embedding_dim": 512,
+      "num_layers": 4,
+      "num_timesteps": 3,
+      "dropout": 0.2
+    },
+    "fusion": "concat",
+    "fusion_dim": 256,
+    "dropout": 0.2,
+    "attention_heads": 4
+  },
+  "transfer": {
+    "mode": "finetune",
+    "checkpoint": "/home/dmlab/Aviral/attentivefp_dta_final/runs/pcba/scaffold_seed42/best.pt",
+    "warmup_epochs": 5
+  },
+  "training": {
+    "output_dir": "/home/dmlab/Aviral/attentivefp_dta_final/runs/kiba/scaffold/finetune/seed42",
+    "device": "cuda",
+    "precision": "auto",
+    "batch_size": 128,
+    "workers": 0,
+    "epochs": 100,
+    "patience": 12,
+    "learning_rate": 0.001,
+    "encoder_learning_rate": 2e-05,
+    "weight_decay": 1e-05,
+    "gradient_clip": 5.0,
+    "normalize_labels": true,
+    "min_delta": 0.0,
+    "log_every": 100,
+    "progress": true,
+    "stop_after_epoch": null
+  }
+}

@@ -1,0 +1,107 @@
+Report directory: /home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T151221Z_3cd91fc5
+Verifying kiba/cold_drug predictions and fingerprints...
+Verifying davis/cold_drug predictions and fingerprints...
+# cold_drug transfer validation
+
+Numbers are computed from the project's saved test predictions; no scores are supplied by this helper.
+
+## Seed means and sample standard deviations
+
+| Dataset | Variant | MSE | MAE | Concordance index |
+|---|---|---|---|---|
+| kiba | scratch | 0.65265 ± 0.01497 | 0.57358 ± 0.00558 | 0.73711 ± 0.00112 |
+| kiba | frozen | 0.67051 ± 0.00736 | 0.57810 ± 0.00451 | 0.73495 ± 0.00191 |
+| kiba | finetune | 0.63136 ± 0.01706 | 0.56065 ± 0.01063 | 0.74404 ± 0.00426 |
+| davis | scratch | 0.90039 ± 0.04690 | 0.56848 ± 0.08921 | 0.65523 ± 0.08203 |
+| davis | frozen | 0.75006 ± 0.05486 | 0.52848 ± 0.00999 | 0.69731 ± 0.02580 |
+| davis | finetune | 0.63529 ± 0.02416 | 0.47571 ± 0.01646 | 0.73936 ± 0.00536 |
+
+## Per-seed fine-tuned minus scratch MSE
+
+| Dataset | Training seed | Difference (negative favors fine-tuning) |
+|---|---|---|
+| kiba | 42 | -0.03648 |
+| kiba | 43 | 0.01222 |
+| kiba | 44 | -0.03960 |
+| davis | 42 | -0.26815 |
+| davis | 43 | -0.22909 |
+| davis | 44 | -0.29804 |
+
+## Test-set exposure and independent group counts
+
+| Dataset | Pairs | Drugs | Scaffolds | Drugs in PCBA train | Drugs in PCBA validation |
+|---|---|---|---|---|---|
+| kiba | 11769 | 460 | 348 | 8 | 1 |
+| davis | 2653 | 7 | 7 | 1 | 2 |
+
+Across the two curated datasets: 9 shared drugs, 179 shared exact proteins and 1043 shared drug-protein pairs. These benchmarks need not be wholly independent.
+
+## Primary paired comparison: fine-tuned minus scratch MSE
+
+Negative differences favor fine-tuning. These are conditional, pointwise 95% percentile intervals; not p-values or proof of causation.
+
+- kiba: difference -0.02129; interval [-0.06803, 0.02074]; 460 held-out drug_id groups.
+  The interval includes zero; these data do not clearly separate the models at this interval level.
+- davis: difference -0.26509; interval [-0.75730, 0.01476]; 7 held-out drug_id groups.
+  Few groups (<20): treat the percentile interval cautiously; inspect group errors and additional fixed splits.
+  The interval includes zero; these data do not clearly separate the models at this interval level.
+
+## Scope and safeguards
+
+- Predictions are aligned by pair IDs, with exact entity and saved-label checks across models/seeds.
+- Data and test-checkpoint fingerprints and saved errors are checked before analysis.
+- Errors remain pair-weighted; a drug with more pairs contributes more, as in the original benchmark metric.
+- Seeds remain fixed in the cluster bootstrap. Their sample SD is reported separately; this is not a combined seed-and-drug interval.
+- Scaffold reviews resample scaffolds rather than treating related drugs as independent.
+- Review data_and_exposure_review.json before claiming pretraining-unseen drugs or independent benchmarks.
+- Do not change hyperparameters based on these test reports.
+
+
+RUN /home/dmlab/miniconda3/envs/attentivefp-pcba/bin/python -u make_split.py --processed-dir /home/dmlab/Aviral/attentivefp_dta_final/data/kiba/processed --mode scaffold --seed 42
+/home/dmlab/Aviral/attentivefp_dta_final/data/kiba/processed/splits/scaffold_seed42.json
+kiba scaffold partition counts: {"train": {"pairs": 94122, "drugs": 1336, "proteins": 229, "scaffolds": 599}, "validation": {"pairs": 11773, "drugs": 371, "proteins": 229, "scaffolds": 297}, "test": {"pairs": 11762, "drugs": 361, "proteins": 226, "scaffolds": 296}}
+
+RUN /home/dmlab/miniconda3/envs/attentivefp-pcba/bin/python -u audit.py dta --processed-dir /home/dmlab/Aviral/attentivefp_dta_final/data/kiba/processed --split-file /home/dmlab/Aviral/attentivefp_dta_final/data/kiba/processed/splits/scaffold_seed42.json --output /home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T151221Z_3cd91fc5/kiba_scaffold_audit.json
+Audit passed; saved /home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T151221Z_3cd91fc5/kiba_scaffold_audit.json
+
+RUN /home/dmlab/miniconda3/envs/attentivefp-pcba/bin/python -u make_split.py --processed-dir /home/dmlab/Aviral/attentivefp_dta_final/data/davis/processed --mode scaffold --seed 42
+/home/dmlab/Aviral/attentivefp_dta_final/data/davis/processed/splits/scaffold_seed42.json
+davis scaffold partition counts: {"train": {"pairs": 20466, "drugs": 54, "proteins": 379, "scaffolds": 54}, "validation": {"pairs": 2653, "drugs": 7, "proteins": 379, "scaffolds": 7}, "test": {"pairs": 2653, "drugs": 7, "proteins": 379, "scaffolds": 7}}
+
+RUN /home/dmlab/miniconda3/envs/attentivefp-pcba/bin/python -u audit.py dta --processed-dir /home/dmlab/Aviral/attentivefp_dta_final/data/davis/processed --split-file /home/dmlab/Aviral/attentivefp_dta_final/data/davis/processed/splits/scaffold_seed42.json --output /home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T151221Z_3cd91fc5/davis_scaffold_audit.json
+Audit passed; saved /home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T151221Z_3cd91fc5/davis_scaffold_audit.json
+
+Scaffold kiba / scratch / seed 42: train
+
+RUN /home/dmlab/miniconda3/envs/attentivefp-pcba/bin/python -u train_dta.py --config /home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T151221Z_3cd91fc5/locked_configs/kiba_scratch_seed42.json
+Traceback (most recent call last):
+  File "/home/dmlab/Aviral/attentivefp_dta_final/train_dta.py", line 6, in <module>
+    main()
+  File "/home/dmlab/Aviral/attentivefp_dta_final/src/dta_project/train_dta.py", line 79, in main
+    train(load_config(args.config, args.set), args.resume)
+  File "/home/dmlab/Aviral/attentivefp_dta_final/src/dta_project/train_dta.py", line 61, in train
+    return fit(
+           ^^^^
+  File "/home/dmlab/Aviral/attentivefp_dta_final/src/dta_project/engine.py", line 205, in fit
+    optimizer = torch.optim.AdamW(
+                ^^^^^^^^^^^^^^^^^^
+  File "/home/dmlab/miniconda3/envs/attentivefp-pcba/lib/python3.11/site-packages/torch/optim/adamw.py", line 36, in __init__
+    super().__init__(
+  File "/home/dmlab/miniconda3/envs/attentivefp-pcba/lib/python3.11/site-packages/torch/optim/adam.py", line 66, in __init__
+    if not 0.0 <= weight_decay:
+           ^^^^^^^^^^^^^^^^^^^
+TypeError: '<=' not supported between instances of 'float' and 'str'
+STOPPED: Command '['/home/dmlab/miniconda3/envs/attentivefp-pcba/bin/python', '-u', 'train_dta.py', '--config', '/home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T151221Z_3cd91fc5/locked_configs/kiba_scratch_seed42.json']' returned non-zero exit status 1.
+Completed reports remain at /home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T151221Z_3cd91fc5. No existing outputs were deleted.
+Traceback (most recent call last):
+  File "/home/dmlab/Aviral/attentivefp_dta_final/validation_followup/run.py", line 168, in <module>
+    main()
+  File "/home/dmlab/Aviral/attentivefp_dta_final/validation_followup/run.py", line 152, in main
+    run_scaffold(project, output, source, args.datasets, args.seeds, args.resume_incomplete)
+  File "/home/dmlab/Aviral/attentivefp_dta_final/validation_followup/run.py", line 94, in run_scaffold
+    command(project, *args)
+  File "/home/dmlab/Aviral/attentivefp_dta_final/validation_followup/run.py", line 24, in command
+    subprocess.run(argv, cwd=project, check=True)
+  File "/home/dmlab/miniconda3/envs/attentivefp-pcba/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/home/dmlab/miniconda3/envs/attentivefp-pcba/bin/python', '-u', 'train_dta.py', '--config', '/home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T151221Z_3cd91fc5/locked_configs/kiba_scratch_seed42.json']' returned non-zero exit status 1.

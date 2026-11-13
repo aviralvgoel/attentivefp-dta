@@ -1,0 +1,178 @@
+{
+  "datasets": {
+    "kiba": {
+      "label_transform": "none",
+      "partitions": {
+        "train": {
+          "pairs": 94122,
+          "drugs": 1336,
+          "proteins": 229,
+          "scaffolds": 599
+        },
+        "validation": {
+          "pairs": 11773,
+          "drugs": 371,
+          "proteins": 229,
+          "scaffolds": 297
+        },
+        "test": {
+          "pairs": 11762,
+          "drugs": 361,
+          "proteins": 226,
+          "scaffolds": 296
+        }
+      },
+      "pcba_exposure": {
+        "train": {
+          "unique_drugs": 1336,
+          "unique_scaffolds": 599,
+          "pcba": {
+            "train": {
+              "drugs": 31,
+              "scaffolds": 96
+            },
+            "validation": {
+              "drugs": 8,
+              "scaffolds": 17
+            },
+            "test": {
+              "drugs": 8,
+              "scaffolds": 20
+            }
+          }
+        },
+        "validation": {
+          "unique_drugs": 371,
+          "unique_scaffolds": 297,
+          "pcba": {
+            "train": {
+              "drugs": 4,
+              "scaffolds": 43
+            },
+            "validation": {
+              "drugs": 1,
+              "scaffolds": 4
+            },
+            "test": {
+              "drugs": 5,
+              "scaffolds": 13
+            }
+          }
+        },
+        "test": {
+          "unique_drugs": 361,
+          "unique_scaffolds": 296,
+          "pcba": {
+            "train": {
+              "drugs": 14,
+              "scaffolds": 40
+            },
+            "validation": {
+              "drugs": 5,
+              "scaffolds": 7
+            },
+            "test": {
+              "drugs": 4,
+              "scaffolds": 6
+            }
+          }
+        }
+      }
+    },
+    "davis": {
+      "label_transform": "neg_log10_nM",
+      "partitions": {
+        "train": {
+          "pairs": 20466,
+          "drugs": 54,
+          "proteins": 379,
+          "scaffolds": 54
+        },
+        "validation": {
+          "pairs": 2653,
+          "drugs": 7,
+          "proteins": 379,
+          "scaffolds": 7
+        },
+        "test": {
+          "pairs": 2653,
+          "drugs": 7,
+          "proteins": 379,
+          "scaffolds": 7
+        }
+      },
+      "pcba_exposure": {
+        "train": {
+          "unique_drugs": 54,
+          "unique_scaffolds": 54,
+          "pcba": {
+            "train": {
+              "drugs": 9,
+              "scaffolds": 12
+            },
+            "validation": {
+              "drugs": 6,
+              "scaffolds": 7
+            },
+            "test": {
+              "drugs": 5,
+              "scaffolds": 11
+            }
+          }
+        },
+        "validation": {
+          "unique_drugs": 7,
+          "unique_scaffolds": 7,
+          "pcba": {
+            "train": {
+              "drugs": 1,
+              "scaffolds": 2
+            },
+            "validation": {
+              "drugs": 1,
+              "scaffolds": 3
+            },
+            "test": {
+              "drugs": 1,
+              "scaffolds": 1
+            }
+          }
+        },
+        "test": {
+          "unique_drugs": 7,
+          "unique_scaffolds": 7,
+          "pcba": {
+            "train": {
+              "drugs": 1,
+              "scaffolds": 2
+            },
+            "validation": {
+              "drugs": 2,
+              "scaffolds": 2
+            },
+            "test": {
+              "drugs": 0,
+              "scaffolds": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "cross_dataset_overlap": {
+    "datasets": [
+      "kiba",
+      "davis"
+    ],
+    "shared_drugs": 9,
+    "shared_exact_proteins": 179,
+    "shared_exact_drug_protein_pairs": 1043,
+    "note": "Labels have different meanings/scales. Shared entities/pairs mean the benchmarks are not wholly independent; no labels are merged."
+  },
+  "limitations": [
+    "PCBA membership uses stored canonical identities and the shared feature schema.",
+    "PCBA validation compounds influenced checkpoint selection; training, validation and test memberships are reported separately.",
+    "Compound exposure does not establish assay endpoint overlap. Endpoints require a separate domain review.",
+    "Historical PCBA transfer checkpoint hashes were not recorded by the original trainer; current files/configuration paths do not prove historical immutability."
+  ]
+}

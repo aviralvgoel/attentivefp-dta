@@ -1,0 +1,30 @@
+root: .
+seed: 42
+data:
+  processed_dir: data/pcba/processed
+  split_file: data/pcba/processed/splits/scaffold_seed42.json
+  cache_shards: 2
+model:
+  hidden_dim: 256
+  embedding_dim: 512
+  num_layers: 4
+  num_timesteps: 3
+  dropout: 0.2
+training:
+  output_dir: runs/pcba/scaffold_seed42
+  device: cuda
+  precision: auto
+  batch_size: 512
+  workers: 4
+  epochs: 40
+  patience: 7
+  learning_rate: 0.0002
+  weight_decay: 0.00001
+  gradient_clip: 5.0
+  class_weighting: true
+  positive_weight_cap: 50.0
+  smoke_allow_bce_fallback: false
+  min_delta: 0.0
+  log_every: 100
+  progress: true
+  stop_after_epoch: null

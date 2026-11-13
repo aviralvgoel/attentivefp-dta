@@ -1,0 +1,20 @@
+{
+  "mode": "scaffold",
+  "pairs": {
+    "train": 94122,
+    "validation": 11773,
+    "test": 11762
+  },
+  "overlap": {
+    "train/validation/drug_id": 0,
+    "train/validation/protein_id": 229,
+    "train/validation/scaffold": 0,
+    "train/test/drug_id": 0,
+    "train/test/protein_id": 226,
+    "train/test/scaffold": 0,
+    "validation/test/drug_id": 0,
+    "validation/test/protein_id": 226,
+    "validation/test/scaffold": 0
+  },
+  "excluded": 0
+}

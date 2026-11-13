@@ -1,0 +1,15 @@
+{
+  "project": "/home/dmlab/Aviral/attentivefp_dta_final",
+  "datasets": [
+    "kiba",
+    "davis"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "replicates": 5000,
+  "review_only": false,
+  "plan_only": false
+}

@@ -1,0 +1,29 @@
+Report directory: /home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T150843Z_79d9025f
+STOPPED: Unable to find a usable engine; tried using: 'pyarrow', 'fastparquet'.
+A suitable version of pyarrow or fastparquet is required for parquet support.
+Trying to import the above resulted in these errors:
+ - Missing optional dependency 'pyarrow'. pyarrow is required for parquet support. Use pip or conda to install pyarrow.
+ - Missing optional dependency 'fastparquet'. fastparquet is required for parquet support. Use pip or conda to install fastparquet.
+Completed reports remain at /home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T150843Z_79d9025f. No existing outputs were deleted.
+Traceback (most recent call last):
+  File "/home/dmlab/Aviral/attentivefp_dta_final/validation_followup/run.py", line 168, in <module>
+    main()
+  File "/home/dmlab/Aviral/attentivefp_dta_final/validation_followup/run.py", line 141, in main
+    source = review(project, output / "cold_drug", "cold_drug", args.datasets, args.seeds, args.replicates)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dmlab/Aviral/attentivefp_dta_final/validation_followup/analysis.py", line 283, in review
+    pcba = load_pcba(project)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/dmlab/Aviral/attentivefp_dta_final/validation_followup/analysis.py", line 86, in load_pcba
+    index = pd.read_parquet(index_path)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/pandas/io/parquet.py", line 654, in read_parquet
+    impl = get_engine(engine)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/pandas/io/parquet.py", line 66, in get_engine
+    raise ImportError(
+ImportError: Unable to find a usable engine; tried using: 'pyarrow', 'fastparquet'.
+A suitable version of pyarrow or fastparquet is required for parquet support.
+Trying to import the above resulted in these errors:
+ - Missing optional dependency 'pyarrow'. pyarrow is required for parquet support. Use pip or conda to install pyarrow.
+ - Missing optional dependency 'fastparquet'. fastparquet is required for parquet support. Use pip or conda to install fastparquet.

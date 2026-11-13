@@ -1,0 +1,7 @@
+extends: kiba_scratch.yaml
+data:
+  processed_dir: data/davis/processed
+  split_file: data/davis/processed/splits/cold_drug_seed42.json
+  protein_cache: data/davis/esm2_mean.pt
+training:
+  output_dir: runs/davis/cold_drug/scratch/seed42

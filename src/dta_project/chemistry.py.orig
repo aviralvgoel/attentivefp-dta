@@ -1,0 +1,138 @@
+"""Versioned graph features shared by pretraining AND downstream DTA.
+
+Canonicalization retains salts, formal charges, and stereochemistry. It does not
+perform tautomer normalization or select a largest fragment. Change the schema
+version and reprocess BOTH datasets if those choices change.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+
+import torch
+from rdkit import Chem
+from rdkit.Chem.rdchem import BondStereo, BondType, ChiralType, HybridizationType
+from rdkit.Chem.Scaffolds import MurckoScaffold
+from torch_geometric.data import Data
+
+ATOM_NUMBERS = (1, 5, 6, 7, 8, 9, 14, 15, 16, 17, 35, 53)
+DEGREES = (0, 1, 2, 3, 4, 5)
+CHARGES = (-2, -1, 0, 1, 2)
+HYBRIDS = (
+    HybridizationType.SP,
+    HybridizationType.SP2,
+    HybridizationType.SP3,
+    HybridizationType.SP3D,
+    HybridizationType.SP3D2,
+)
+HYDROGENS = (0, 1, 2, 3, 4)
+CHIRALS = (
+    ChiralType.CHI_UNSPECIFIED,
+    ChiralType.CHI_TETRAHEDRAL_CW,
+    ChiralType.CHI_TETRAHEDRAL_CCW,
+)
+BONDS = (BondType.SINGLE, BondType.DOUBLE, BondType.TRIPLE, BondType.AROMATIC)
+STEREOS = (
+    BondStereo.STEREONONE,
+    BondStereo.STEREOANY,
+    BondStereo.STEREOZ,
+    BondStereo.STEREOE,
+    BondStereo.STEREOCIS,
+    BondStereo.STEREOTRANS,
+)
+SCHEMA = {
+    "version": "aviral_graph_v1",
+    "canonical_isomeric_smiles": True,
+    "retain_fragments": True,
+    "atoms": {
+        "numbers": list(ATOM_NUMBERS),
+        "degree": list(DEGREES),
+        "charges": list(CHARGES),
+        "hybridization": [str(x) for x in HYBRIDS],
+        "aromatic": True,
+        "hydrogens": list(HYDROGENS),
+        "chiral": [str(x) for x in CHIRALS],
+        "ring": True,
+        "mass_scale": 200.0,
+        "onehot_unknown": True,
+    },
+    "bonds": {
+        "types": [str(x) for x in BONDS],
+        "conjugated": True,
+        "ring": True,
+        "stereo": [str(x) for x in STEREOS],
+        "onehot_unknown": True,
+        "directed": True,
+        "self_loops": False,
+    },
+}
+SCHEMA_HASH = hashlib.sha256(json.dumps(SCHEMA, sort_keys=True).encode()).hexdigest()
+NODE_DIM = 45
+EDGE_DIM = 14
+
+
+def onehot(value, choices):
+    return [float(value == x) for x in choices] + [float(value not in choices)]
+
+
+def molecule(smiles):
+    if not isinstance(smiles, str) or not smiles.strip():
+        raise ValueError("SMILES must be non-empty")
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None or mol.GetNumAtoms() == 0:
+        raise ValueError(f"Invalid SMILES {smiles!r}")
+    return mol
+
+
+def canonicalize(smiles):
+    return Chem.MolToSmiles(molecule(smiles), canonical=True, isomericSmiles=True)
+
+
+def scaffold(smiles):
+    # All acyclic molecules share the empty scaffold. Do not invent a per-drug
+    # key here: doing so would falsely claim strict scaffold disjointness.
+    return MurckoScaffold.MurckoScaffoldSmiles(mol=molecule(smiles), includeChirality=False)
+
+
+def atom_features(a):
+    return (
+        onehot(a.GetAtomicNum(), ATOM_NUMBERS)
+        + onehot(a.GetDegree(), DEGREES)
+        + onehot(a.GetFormalCharge(), CHARGES)
+        + onehot(a.GetHybridization(), HYBRIDS)
+        + [float(a.GetIsAromatic())]
+        + onehot(a.GetTotalNumHs(), HYDROGENS)
+        + onehot(a.GetChiralTag(), CHIRALS)
+        + [float(a.IsInRing()), a.GetMass() / 200.0]
+    )
+
+
+def bond_features(b):
+    return (
+        onehot(b.GetBondType(), BONDS)
+        + [float(b.GetIsConjugated()), float(b.IsInRing())]
+        + onehot(b.GetStereo(), STEREOS)
+    )
+
+
+def smiles_to_graph(smiles):
+    mol = molecule(canonicalize(smiles))  # stable atom ordering from canonical SMILES
+    x = torch.tensor([atom_features(a) for a in mol.GetAtoms()], dtype=torch.float32)
+    edges, attributes = [], []
+    for b in mol.GetBonds():
+        i, j = b.GetBeginAtomIdx(), b.GetEndAtomIdx()
+        edges.extend([(i, j), (j, i)])
+        attributes.extend([bond_features(b), bond_features(b)])
+    edge_index = (
+        torch.tensor(edges, dtype=torch.long).t().contiguous()
+        if edges
+        else torch.empty((2, 0), dtype=torch.long)
+    )
+    edge_attr = (
+        torch.tensor(attributes, dtype=torch.float32)
+        if attributes
+        else torch.empty((0, EDGE_DIM), dtype=torch.float32)
+    )
+    assert x.shape[1] == NODE_DIM and edge_attr.shape[1] == EDGE_DIM
+    return Data(x=x, edge_index=edge_index, edge_attr=edge_attr)

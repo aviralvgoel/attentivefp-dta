@@ -1,0 +1,6 @@
+extends: kiba_scratch.yaml
+transfer:
+  mode: frozen
+  checkpoint: runs/pcba/scaffold_seed42/best.pt
+training:
+  output_dir: runs/kiba/cold_drug/frozen/seed42

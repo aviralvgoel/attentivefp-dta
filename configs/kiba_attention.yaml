@@ -1,0 +1,8 @@
+extends: kiba_finetune.yaml
+data:
+  protein_cache: data/kiba/esm2_residues.pt
+model:
+  fusion: cross_attention
+training:
+  output_dir: runs/kiba/cold_drug/attention/seed42
+  batch_size: 16

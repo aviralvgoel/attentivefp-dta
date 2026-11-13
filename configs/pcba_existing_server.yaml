@@ -1,0 +1,9 @@
+extends: pcba.yaml
+# Adapter for YOUR existing server data. These are not the synthetic smoke paths.
+data:
+  processed_dir: /home/dmlab/Aviral/Attentive_FP/data/processed
+  split_file: /home/dmlab/Aviral/Attentive_FP/data/splits/scaffold_seed42.json
+training:
+  output_dir: runs/pcba/existing_scaffold_seed42
+# Existing data without verified schema metadata can be pretrained/evaluated,
+# but its encoder cannot be transferred silently using a different featurizer.

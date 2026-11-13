@@ -1,0 +1,39 @@
+root: .
+seed: 42
+data:
+  processed_dir: data/kiba/processed
+  split_file: data/kiba/processed/splits/cold_drug_seed42.json
+  protein_cache: data/kiba/esm2_mean.pt
+  allow_synthetic: false
+model:
+  drug:
+    hidden_dim: 256
+    embedding_dim: 512
+    num_layers: 4
+    num_timesteps: 3
+    dropout: 0.2
+  fusion: concat
+  fusion_dim: 256
+  dropout: 0.2
+  attention_heads: 4
+transfer:
+  mode: scratch
+  checkpoint: null
+  warmup_epochs: 0
+training:
+  output_dir: runs/kiba/cold_drug/scratch/seed42
+  device: cuda
+  precision: auto
+  batch_size: 128
+  workers: 0
+  epochs: 100
+  patience: 12
+  learning_rate: 0.001
+  encoder_learning_rate: 0.0002
+  weight_decay: 0.00001
+  gradient_clip: 5.0
+  normalize_labels: true
+  min_delta: 0.0
+  log_every: 100
+  progress: true
+  stop_after_epoch: null

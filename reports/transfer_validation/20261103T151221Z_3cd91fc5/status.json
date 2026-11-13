@@ -1,0 +1,4 @@
+{
+  "status": "failed",
+  "error": "Command '['/home/dmlab/miniconda3/envs/attentivefp-pcba/bin/python', '-u', 'train_dta.py', '--config', '/home/dmlab/Aviral/attentivefp_dta_final/reports/transfer_validation/20261103T151221Z_3cd91fc5/locked_configs/kiba_scratch_seed42.json']' returned non-zero exit status 1."
+}

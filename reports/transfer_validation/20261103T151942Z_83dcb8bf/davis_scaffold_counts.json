@@ -1,0 +1,20 @@
+{
+  "train": {
+    "pairs": 20466,
+    "drugs": 54,
+    "proteins": 379,
+    "scaffolds": 54
+  },
+  "validation": {
+    "pairs": 2653,
+    "drugs": 7,
+    "proteins": 379,
+    "scaffolds": 7
+  },
+  "test": {
+    "pairs": 2653,
+    "drugs": 7,
+    "proteins": 379,
+    "scaffolds": 7
+  }
+}
